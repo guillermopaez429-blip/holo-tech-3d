@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOLO TECH 3D</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#030914;
+ color:#e9fcff;
+ font-family:Arial,sans-serif;
+}
+header{
+ padding:24px 15px;
+ text-align:center;
+ background:linear-gradient(135deg,#03172e,#075c91);
+ border-bottom:1px solid #00d9ff;
+}
+h1{
+ color:#42eaff;
+ text-shadow:0 0 15px #00cfff;
+ margin:5px;
+}
+header p{color:#b5eaff;font-size:13px}
+main{padding:18px;max-width:480px;margin:auto}
+.panel{
+ background:linear-gradient(145deg,#0b2037,#06101e);
+ border:1px solid #087eaa;
+ border-radius:18px;
+ padding:17px;
+ margin-bottom:17px;
+ box-shadow:0 0 18px #007b9c33;
+}
+h2{font-size:17px;color:#54eaff}
+.phone{
+ width:220px;
+ height:390px;
+ margin:15px auto;
+ border:3px solid #39dfff;
+ border-radius:30px;
+ padding:12px;
+ background:radial-gradient(circle at 50% 40%,#075b82,#061426 65%,#020710);
+ box-shadow:0 0 25px #00cfff88;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ overflow:hidden;
+}
+.orb{
+ width:105px;height:105px;
+ border-radius:50%;
+ background:radial-gradient(circle at 35% 30%,white,#25dfff 20%,#0759a0 60%,#020914);
+ box-shadow:0 0 30px #00dfff;
+ margin:20px;
+}
+.phone h2{font-size:19px}
+.phone p{font-size:11px;color:#b9eaff}
+button{
+ width:100%;
+ padding:14px;
+ margin:6px 0;
+ border:1px solid #32dfff;
+ border-radius:10px;
+ color:white;
+ background:linear-gradient(100deg,#075078,#06304c);
+ font-size:14px;
+ font-weight:bold;
+}
+button:active{background:#087da4}
+input{
+ width:100%;padding:12px;
+ background:#071a2d;color:white;
+ border:1px solid #19c8ee;
+ border-radius:9px;
+}
+footer{text-align:center;color:#79a9c1;font-size:11px;padding:20px}
+</style>
+</head>
+<body>
+<header>
+<h1>HOLO TECH 3D</h1>
+<p>CREADOR DE TEMAS HOLOGRÁFICOS</p>
+</header>
+<main>
+<div class="panel">
+<h2>◈ Vista previa del tema</h2>
+<div class="phone" id="phone">
+<p>09:41</p>
+<div class="orb"></div>
+<h2 id="themeName">HOLO TECH</h2>
+<p>TECNOLOGÍA DEL FUTURO</p>
+<p>◉ ● ◈ ◆</p>
+</div>
+</div>
+<div class="panel">
+<h2>Personalizar tu tema</h2>
+<input id="name" placeholder="Nombre de tu tema">
+<button onclick="changeName()">Cambiar nombre</button>
+<button onclick="changeColor('#00dfff')">Azul holográfico</button>
+<button onclick="changeColor('#b34dff')">Violeta 3D</button>
+<button onclick="changeColor('#00ff9d')">Verde futurista</button>
+<button onclick="changeColor('#ff4d9d')">Rosa neón</button>
+</div>
+<div class="panel">
+<h2>Tu próximo diseño</h2>
+<p>✓ Fondos futuristas</p>
+<p>✓ Iconos personalizados</p>
+<p>✓ Pantalla de bloqueo</p>
+<p>✓ Diseños para Xiaomi y Redmi</p>
+</div>
+</main>
+<footer>HOLO TECH 3D · Proyecto de diseño digital</footer>
+<script>
+function changeName(){
+ let n=document.getElementById('name').value.trim();
+ if(n) document.getElementById('themeName').textContent=n;
+}
+function changeColor(c){
+ document.querySelector('.phone').style.borderColor=c;
+ document.querySelector('.phone').style.boxShadow='0 0 25px '+c;
+ document.querySelector('.orb').style.boxShadow='0 0 35px '+c;
+ document.querySelector('.orb').style.background=
+ 'radial-gradient(circle at 35% 30%,white,'+c+' 25%,#0759a0 65%,#020914)';
+}
+</script>
+</body>
+</html>
