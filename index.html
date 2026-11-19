@@ -1,4 +1,4 @@
-
+a
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -81,52 +81,61 @@ input{
 footer{text-align:center;color:#79a9c1;font-size:11px;padding:20px}
 </style>
 </head>
-<body>
-<header>
-<h1>HOLO TECH 3D</h1>
-<p>CREADOR DE TEMAS HOLOGRÁFICOS</p>
-</header>
-<main>
-<div class="panel">
-<h2>◈ Vista previa del tema</h2>
-<div class="phone" id="phone">
-<p>09:41</p>
-<div class="orb"></div>
-<h2 id="themeName">HOLO TECH</h2>
-<p>TECNOLOGÍA DEL FUTURO</p>
-<p>◉ ● ◈ ◆</p>
-</div>
-</div>
-<div class="panel">
-<h2>Personalizar tu tema</h2>
-<input id="name" placeholder="Nombre de tu tema">
-<button onclick="changeName()">Cambiar nombre</button>
-<button onclick="changeColor('#00dfff')">Azul holográfico</button>
-<button onclick="changeColor('#b34dff')">Violeta 3D</button>
-<button onclick="changeColor('#00ff9d')">Verde futurista</button>
-<button onclick="changeColor('#ff4d9d')">Rosa neón</button>
-</div>
-<div class="panel">
-<h2>Tu próximo diseño</h2>
-<p>✓ Fondos futuristas</p>
-<p>✓ Iconos personalizados</p>
-<p>✓ Pantalla de bloqueo</p>
-<p>✓ Diseños para Xiaomi y Redmi</p>
-</div>
-</main>
-<footer>HOLO TECH 3D · Proyecto de diseño digital</footer>
+
+<!-- GENERADOR HOLO TECH 3D -->
+<section id="holo-generator" style="padding:20px;background:#090d20;color:white;border-radius:18px;margin:15px;">
+  <h2 style="text-align:center;color:#00eaff;">✨ HOLO AI 3D</h2>
+  <p style="text-align:center;">Creá tu propio fondo holográfico</p>
+
+  <input id="holo-prompt" type="text"
+    placeholder="Ej: Dragón azul holográfico"
+    style="width:100%;padding:14px;border-radius:10px;border:1px solid #00eaff;background:#111a35;color:white;box-sizing:border-box;">
+
+  <select id="holo-style"
+    style="width:100%;padding:14px;margin-top:12px;border-radius:10px;background:#111a35;color:white;">
+    <option>Holograma futurista</option>
+    <option>Neón cyberpunk</option>
+    <option>Galaxia 3D</option>
+    <option>Cristal holográfico</option>
+    <option>Abstracto tecnológico</option>
+  </select>
+
+  <button onclick="holoPreview()"
+    style="width:100%;padding:15px;margin-top:15px;background:#00cfff;color:#001020;border:0;border-radius:12px;font-weight:bold;">
+    CREAR MI DISEÑO
+  </button>
+
+  <div id="holo-result" style="margin-top:18px;text-align:center;">
+    Tu diseño aparecerá aquí.
+  </div>
+</section>
+
 <script>
-function changeName(){
- let n=document.getElementById('name').value.trim();
- if(n) document.getElementById('themeName').textContent=n;
+function holoPreview() {
+  const prompt = document.getElementById("holo-prompt").value.trim();
+  const style = document.getElementById("holo-style").value;
+  const result = document.getElementById("holo-result");
+
+  if (!prompt) {
+    result.innerHTML = "⚠️ Escribí qué fondo querés crear.";
+    return;
+  }
+
+  result.innerHTML = `
+    <div style="padding:20px;border:1px solid #00eaff;border-radius:15px;background:linear-gradient(135deg,#071c45,#30105b,#001c36);">
+      <h3 style="color:#00eaff;">✨ HOLO TECH 3D</h3>
+      <p>${holoEscape(prompt)}</p>
+      <p>Estilo: ${holoEscape(style)}</p>
+      <p>Diseño preparado para generación IA.</p>
+    </div>`;
 }
-function changeColor(c){
- document.querySelector('.phone').style.borderColor=c;
- document.querySelector('.phone').style.boxShadow='0 0 25px '+c;
- document.querySelector('.orb').style.boxShadow='0 0 35px '+c;
- document.querySelector('.orb').style.background=
- 'radial-gradient(circle at 35% 30%,white,'+c+' 25%,#0759a0 65%,#020914)';
+
+function holoEscape(text) {
+  return text.replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;',
+    '"':'&quot;', "'":'&#39;'
+  })[c]);
 }
 </script>
-</body>
+<body>
 </html>
