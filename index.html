@@ -18,7 +18,7 @@ header{
  background:linear-gradient(135deg,#03172e,#075c91);
  border-bottom:1px solid #00d9ff;
 }
-h1{color:#42eaff;text-shadow:0 0 15px #00cfff;margin:5px}
+h1{color:#42eaff;text-shadow:0 0 15px #00cfff}
 header p{color:#b5eaff;font-size:13px}
 main{padding:16px;max-width:480px;margin:auto}
 .panel{
@@ -51,22 +51,27 @@ button{
  color:white;background:linear-gradient(100deg,#075078,#06304c);
  font-size:14px;font-weight:bold;cursor:pointer;
 }
-button:active{background:#087da4}
+button:disabled{opacity:.5}
 input,select{
  width:100%;padding:13px;margin:7px 0;
  background:#071a2d;color:white;
  border:1px solid #19c8ee;border-radius:9px;
 }
-select option{background:#071a2d}
-.colors{display:flex;gap:12px;justify-content:center;margin:15px}
-.color{
- width:38px;height:38px;border-radius:50%;
- border:2px solid white;cursor:pointer;
+.colors{
+ display:flex;gap:12px;justify-content:center;margin:15px
 }
+.color{width:38px;height:38px;padding:0;border-radius:50%}
 #result{
  margin-top:15px;text-align:center;
+ overflow-wrap:anywhere;
 }
-#result svg{width:100%;max-width:280px;border-radius:12px}
+#result img{
+ width:100%;border-radius:12px;margin-top:10px;
+}
+#status{
+ color:#42eaff;text-align:center;
+ font-size:13px;min-height:20px;
+}
 footer{text-align:center;color:#79a9c1;font-size:11px;padding:20px}
 </style>
 </head>
@@ -91,7 +96,6 @@ footer{text-align:center;color:#79a9c1;font-size:11px;padding:20px}
 </div>
 
 <h2>🎨 Elegí tu color</h2>
-
 <div class="colors">
 <button class="color" style="background:#00dfff" onclick="changeColor('#00dfff')"></button>
 <button class="color" style="background:#a855f7" onclick="changeColor('#a855f7')"></button>
@@ -101,8 +105,8 @@ footer{text-align:center;color:#79a9c1;font-size:11px;padding:20px}
 </section>
 
 <section class="panel">
-<h2>✨ HOLO AI 3D</h2>
-<p>Creá tu propio fondo holográfico.</p>
+<h2>🤖 HOLO AI 3D</h2>
+<p>Creá imágenes originales con inteligencia artificial.</p>
 
 <input id="prompt" placeholder="Ej: Dragón azul holográfico">
 
@@ -114,21 +118,39 @@ footer{text-align:center;color:#79a9c1;font-size:11px;padding:20px}
 <option value="tecnologico">Tecnología abstracta</option>
 </select>
 
-<button onclick="createDesign()">🚀 CREAR MI DISEÑO</button>
+<button id="aiButton" onclick="createAI()">
+🚀 GENERAR IMAGEN CON IA
+</button>
 
+<div id="status"></div>
 <div id="result">
-<p>Tu diseño aparecerá aquí.</p>
+<p>Tu imagen aparecerá aquí.</p>
 </div>
 
-<button id="download" style="display:none" onclick="downloadDesign()">
-⬇ DESCARGAR FONDO
+<button id="saveAI" style="display:none" onclick="openImage()">
+🖼️ ABRIR IMAGEN PARA GUARDAR
 </button>
 </section>
 
 <section class="panel">
-<h2>🌌 Próximas funciones</h2>
-<p>• Generación de imágenes con IA real.</p>
-<p>• Fondos animados 3D.</p>
+<h2>🌌 Creador de fondos holográficos</h2>
+<p>También podés crear fondos decorativos sin IA.</p>
+
+<button onclick="createDesign()">
+🎨 CREAR FONDO HOLOGRÁFICO
+</button>
+
+<div id="svgResult"></div>
+
+<button id="downloadSVG" style="display:none" onclick="downloadDesign()">
+⬇ DESCARGAR FONDO SVG
+</button>
+</section>
+
+<section class="panel">
+<h2>🌌 HOLO TECH 3D</h2>
+<p>• Inteligencia artificial.</p>
+<p>• Fondos holográficos.</p>
 <p>• Temas personalizados.</p>
 <p>• Iconos holográficos.</p>
 <p>• Personalización para Android.</p>
@@ -141,49 +163,109 @@ HOLO TECH 3D © 2026<br>
 Creando el futuro digital
 </footer>
 
+<script src="https://js.puter.com/v2/"></script>
+
 <script>
-let currentColor = "#00dfff";
-let currentSVG = "";
+let currentColor="#00dfff";
+let currentImage="";
+let currentSVG="";
 
 function changeColor(color){
- currentColor = color;
- document.getElementById("phone").style.borderColor = color;
- document.getElementById("phone").style.boxShadow = "0 0 25px "+color+"88";
- document.getElementById("orb").style.boxShadow = "0 0 30px "+color;
- document.getElementById("orb").style.background =
+ currentColor=color;
+ document.getElementById("phone").style.borderColor=color;
+ document.getElementById("phone").style.boxShadow="0 0 25px "+color+"88";
+ document.getElementById("orb").style.boxShadow="0 0 30px "+color;
+ document.getElementById("orb").style.background=
  "radial-gradient(circle at 35% 30%,white,"+color+" 25%,#0759a0 65%,#020914)";
 }
 
-function escapeXML(text){
- return text.replace(/[&<>"']/g,function(c){
- return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&apos;"}[c];
- });
+async function createAI(){
+
+ const prompt=document.getElementById("prompt").value.trim();
+ const style=document.getElementById("style").value;
+ const result=document.getElementById("result");
+ const status=document.getElementById("status");
+ const button=document.getElementById("aiButton");
+
+ if(!prompt){
+  status.textContent="⚠️ Escribí qué imagen querés crear.";
+  return;
+ }
+
+ if(!window.puter || !puter.ai){
+  status.textContent="No se pudo cargar Puter AI. Revisá tu conexión.";
+  return;
+ }
+
+ button.disabled=true;
+ button.textContent="⏳ GENERANDO...";
+ status.textContent="La inteligencia artificial está trabajando...";
+ result.innerHTML="";
+ document.getElementById("saveAI").style.display="none";
+
+ const styles={
+  futurista:"futuristic holographic 3D art, luminous blue technology",
+  cyberpunk:"cyberpunk neon art, pink and purple lights",
+  galaxia:"deep space galaxy, cosmic 3D effects",
+  cristal:"translucent holographic crystal, glowing reflections",
+  tecnologico:"advanced abstract technology, green neon effects"
+ };
+
+ try{
+
+  const finalPrompt=prompt+", "+styles[style]+
+  ", highly detailed, beautiful digital artwork, vertical wallpaper";
+
+  const img=await puter.ai.txt2img(finalPrompt,{
+   aspect_ratio:"9:16"
+  });
+
+  currentImage=img.src;
+
+  img.alt="Imagen creada con HOLO AI 3D";
+  img.style.width="100%";
+  img.style.borderRadius="12px";
+
+  result.appendChild(img);
+
+  status.textContent="✨ ¡Tu imagen fue creada correctamente!";
+  document.getElementById("saveAI").style.display="block";
+
+ }catch(error){
+
+  console.error(error);
+  status.textContent="No se pudo generar la imagen. Intentá nuevamente.";
+
+ }finally{
+
+  button.disabled=false;
+  button.textContent="🚀 GENERAR IMAGEN CON IA";
+
+ }
+}
+
+function openImage(){
+ if(currentImage){
+  window.open(currentImage,"_blank");
+ }
 }
 
 function createDesign(){
- const prompt = document.getElementById("prompt").value.trim();
- const style = document.getElementById("style").value;
- const result = document.getElementById("result");
 
- if(!prompt){
- result.innerHTML = "<p>⚠️ Escribí qué fondo querés crear.</p>";
- document.getElementById("download").style.display="none";
- return;
- }
-
- const description = escapeXML(prompt);
- const palette = {
- futurista:["#061b48","#00dfff"],
- cyberpunk:["#310044","#ff42b3"],
- galaxia:["#10052e","#a855f7"],
- cristal:["#052d43","#8fffea"],
- tecnologico:["#061a30","#00ff99"]
+ const palette={
+  futurista:["#061b48","#00dfff"],
+  cyberpunk:["#310044","#ff42b3"],
+  galaxia:["#10052e","#a855f7"],
+  cristal:["#052d43","#8fffea"],
+  tecnologico:["#061a30","#00ff99"]
  };
 
- const colors = palette[style];
+ const style=document.getElementById("style").value;
+ const colors=palette[style];
 
- currentSVG = `
- <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+ currentSVG=`
+ <svg xmlns="http://www.w3.org/2000/svg"
+ width="1080" height="1920" viewBox="0 0 1080 1920">
  <defs>
  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
  <stop stop-color="${colors[0]}"/>
@@ -196,25 +278,32 @@ function createDesign(){
  </defs>
  <rect width="1080" height="1920" fill="url(#bg)"/>
  <circle cx="540" cy="780" r="390" fill="url(#glow)"/>
- <circle cx="540" cy="780" r="240" fill="none" stroke="${colors[1]}" stroke-width="5"/>
- <circle cx="540" cy="780" r="190" fill="none" stroke="${colors[1]}" stroke-width="3" stroke-dasharray="15 20"/>
- <path d="M0 1100 L540 300 L1080 1100" fill="none" stroke="${colors[1]}" stroke-width="3" opacity=".5"/>
- <text x="540" y="1370" font-size="52" fill="white" text-anchor="middle">${description}</text>
- <text x="540" y="1480" font-size="38" fill="${colors[1]}" text-anchor="middle">HOLO TECH 3D</text>
+ <circle cx="540" cy="780" r="240" fill="none"
+ stroke="${colors[1]}" stroke-width="5"/>
+ <circle cx="540" cy="780" r="190" fill="none"
+ stroke="${colors[1]}" stroke-width="3" stroke-dasharray="15 20"/>
+ <path d="M0 1100 L540 300 L1080 1100"
+ fill="none" stroke="${colors[1]}" stroke-width="3"/>
+ <text x="540" y="1370" font-size="70" fill="white"
+ text-anchor="middle">HOLO TECH 3D</text>
  </svg>`;
 
- result.innerHTML = currentSVG;
- document.getElementById("download").style.display="block";
+ document.getElementById("svgResult").innerHTML=currentSVG;
+ document.getElementById("downloadSVG").style.display="block";
 }
 
 function downloadDesign(){
+
  if(!currentSVG)return;
- const blob = new Blob([currentSVG],{type:"image/svg+xml"});
- const url = URL.createObjectURL(blob);
- const link = document.createElement("a");
- link.href = url;
- link.download = "holo-tech-3d.svg";
+
+ const blob=new Blob([currentSVG],{type:"image/svg+xml"});
+ const url=URL.createObjectURL(blob);
+ const link=document.createElement("a");
+
+ link.href=url;
+ link.download="holo-tech-3d.svg";
  link.click();
+
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 </script>
@@ -222,349 +311,4 @@ function downloadDesign(){
 </body>
 </html>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HOLO TECH 3D AI</title>
-
-<script src="https://js.puter.com/v2/"></script>
-
-<style>
-*{box-sizing:border-box}
-body{
- margin:0;
- background:#030914;
- color:#e8faff;
- font-family:Arial,sans-serif;
-}
-header{
- text-align:center;
- padding:25px 12px;
- background:linear-gradient(135deg,#03172e,#075c91);
- border-bottom:2px solid #00dfff;
-}
-h1{color:#42eaff;text-shadow:0 0 15px #00dfff}
-main{max-width:520px;margin:auto;padding:16px}
-.panel{
- background:linear-gradient(145deg,#0b2037,#06101e);
- border:1px solid #087eaa;
- border-radius:18px;
- padding:18px;
- margin-bottom:17px;
- box-shadow:0 0 18px #007b9c33;
-}
-h2{color:#54eaff;font-size:18px}
-textarea{
- width:100%;
- min-height:110px;
- padding:13px;
- border-radius:10px;
- border:1px solid #19c8ee;
- background:#071a2d;
- color:white;
- font-size:15px;
-}
-button{
- width:100%;
- padding:15px;
- margin-top:10px;
- border:1px solid #32dfff;
- border-radius:10px;
- color:white;
- background:linear-gradient(100deg,#075078,#06304c);
- font-weight:bold;
- font-size:15px;
-}
-button:disabled{opacity:.5}
-#resultado{
- width:100%;
- margin-top:15px;
- border-radius:14px;
- display:none;
-}
-#estado{
- color:#54eaff;
- text-align:center;
- margin-top:15px;
-}
-footer{text-align:center;color:#79a9c1;padding:20px;font-size:12px}
-</style>
-</head>
-
-<body>
-
-<header>
-<h1>HOLO TECH 3D</h1>
-<p>INTELIGENCIA ARTIFICIAL · DISEÑOS HOLOGRÁFICOS</p>
-</header>
-
-<main>
-
-<div class="panel">
-<h2>✦ CREADOR DE IMÁGENES IA</h2>
-<p>Describe el fondo que querés crear:</p>
-
-<textarea id="prompt" placeholder="Ejemplo: Un dragón holográfico azul y violeta, con luces 3D y fondo espacial..."></textarea>
-
-<button onclick="generar()">✦ GENERAR CON INTELIGENCIA ARTIFICIAL</button>
-
-<p id="estado">Esperando tu descripción...</p>
-</div>
-
-<div class="panel">
-<h2>◈ TU CREACIÓN</h2>
-
-<img id="resultado" alt="Imagen generada por IA">
-
-<a id="descarga" style="display:none;color:#54eaff"
-download="holo-tech-3d.png">
-<button>⬇ DESCARGAR IMAGEN</button>
-</a>
-</div>
-
-<div class="panel">
-<h2>HOLO TECH 3D</h2>
-<p>✓ Generación de imágenes con IA</p>
-<p>✓ Diseños holográficos</p>
-<p>✓ Fondos para celulares</p>
-<p>✓ Estilo futurista 3D</p>
-</div>
-
-</main>
-
-<footer>
-HOLO TECH 3D · EL FUTURO EN TUS MANOS
-</footer>
-
-<script>
-async function generar(){
-
- const prompt=document.getElementById("prompt").value.trim();
- const estado=document.getElementById("estado");
- const boton=document.querySelector("button");
- const resultado=document.getElementById("resultado");
- const descarga=document.getElementById("descarga");
-
- if(!prompt){
-  estado.textContent="Escribí una descripción primero.";
-  return;
- }
-
- boton.disabled=true;
- boton.textContent="GENERANDO TU DISEÑO...";
- estado.textContent="La inteligencia artificial está trabajando...";
-
- resultado.style.display="none";
- descarga.style.display="none";
-
- try{
-
-  const texto =
-  "Create a stunning vertical 9:16 smartphone wallpaper, " +
-  "high quality, ultra detailed 3D holographic art, " +
-  "glowing neon lights, cinematic depth, futuristic design. " +
-  "Image description: " + prompt;
-
-  const imagen=await puter.ai.txt2img(texto);
-
-  resultado.src=imagen.src;
-  resultado.style.display="block";
-
-  descarga.href=imagen.src;
-  descarga.style.display="block";
-
-  estado.textContent="¡Tu diseño fue generado con IA!";
-
- }catch(error){
-
-  estado.textContent="Error al generar. Revisá tu conexión o acceso a Puter.";
-
-  console.error(error);
-
- }finally{
-
-  boton.disabled=false;
-  boton.textContent="✦ GENERAR CON INTELIGENCIA ARTIFICIAL";
-
- }
-}
-</script>
-
-</body>
-</html>
-
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HOLO TECH 3D AI</title>
-
-<script src="https://js.puter.com/v2/"></script>
-
-<style>
-*{box-sizing:border-box}
-body{
- margin:0;
- background:#030914;
- color:#e8faff;
- font-family:Arial,sans-serif;
-}
-header{
- text-align:center;
- padding:25px 12px;
- background:linear-gradient(135deg,#03172e,#075c91);
- border-bottom:2px solid #00dfff;
-}
-h1{color:#42eaff;text-shadow:0 0 15px #00dfff}
-main{max-width:520px;margin:auto;padding:16px}
-.panel{
- background:linear-gradient(145deg,#0b2037,#06101e);
- border:1px solid #087eaa;
- border-radius:18px;
- padding:18px;
- margin-bottom:17px;
- box-shadow:0 0 18px #007b9c33;
-}
-h2{color:#54eaff;font-size:18px}
-textarea{
- width:100%;
- min-height:110px;
- padding:13px;
- border-radius:10px;
- border:1px solid #19c8ee;
- background:#071a2d;
- color:white;
- font-size:15px;
-}
-button{
- width:100%;
- padding:15px;
- margin-top:10px;
- border:1px solid #32dfff;
- border-radius:10px;
- color:white;
- background:linear-gradient(100deg,#075078,#06304c);
- font-weight:bold;
- font-size:15px;
-}
-button:disabled{opacity:.5}
-#resultado{
- width:100%;
- margin-top:15px;
- border-radius:14px;
- display:none;
-}
-#estado{
- color:#54eaff;
- text-align:center;
- margin-top:15px;
-}
-footer{text-align:center;color:#79a9c1;padding:20px;font-size:12px}
-</style>
-</head>
-
-<body>
-
-<header>
-<h1>HOLO TECH 3D</h1>
-<p>INTELIGENCIA ARTIFICIAL · DISEÑOS HOLOGRÁFICOS</p>
-</header>
-
-<main>
-
-<div class="panel">
-<h2>✦ CREADOR DE IMÁGENES IA</h2>
-<p>Describe el fondo que querés crear:</p>
-
-<textarea id="prompt" placeholder="Ejemplo: Un dragón holográfico azul y violeta, con luces 3D y fondo espacial..."></textarea>
-
-<button onclick="generar()">✦ GENERAR CON INTELIGENCIA ARTIFICIAL</button>
-
-<p id="estado">Esperando tu descripción...</p>
-</div>
-
-<div class="panel">
-<h2>◈ TU CREACIÓN</h2>
-
-<img id="resultado" alt="Imagen generada por IA">
-
-<a id="descarga" style="display:none;color:#54eaff"
-download="holo-tech-3d.png">
-<button>⬇ DESCARGAR IMAGEN</button>
-</a>
-</div>
-
-<div class="panel">
-<h2>HOLO TECH 3D</h2>
-<p>✓ Generación de imágenes con IA</p>
-<p>✓ Diseños holográficos</p>
-<p>✓ Fondos para celulares</p>
-<p>✓ Estilo futurista 3D</p>
-</div>
-
-</main>
-
-<footer>
-HOLO TECH 3D · EL FUTURO EN TUS MANOS
-</footer>
-
-<script>
-async function generar(){
-
- const prompt=document.getElementById("prompt").value.trim();
- const estado=document.getElementById("estado");
- const boton=document.querySelector("button");
- const resultado=document.getElementById("resultado");
- const descarga=document.getElementById("descarga");
-
- if(!prompt){
-  estado.textContent="Escribí una descripción primero.";
-  return;
- }
-
- boton.disabled=true;
- boton.textContent="GENERANDO TU DISEÑO...";
- estado.textContent="La inteligencia artificial está trabajando...";
-
- resultado.style.display="none";
- descarga.style.display="none";
-
- try{
-
-  const texto =
-  "Create a stunning vertical 9:16 smartphone wallpaper, " +
-  "high quality, ultra detailed 3D holographic art, " +
-  "glowing neon lights, cinematic depth, futuristic design. " +
-  "Image description: " + prompt;
-
-  const imagen=await puter.ai.txt2img(texto);
-
-  resultado.src=imagen.src;
-  resultado.style.display="block";
-
-  descarga.href=imagen.src;
-  descarga.style.display="block";
-
-  estado.textContent="¡Tu diseño fue generado con IA!";
-
- }catch(error){
-
-  estado.textContent="Error al generar. Revisá tu conexión o acceso a Puter.";
-
-  console.error(error);
-
- }finally{
-
-  boton.disabled=false;
-  boton.textContent="✦ GENERAR CON INTELIGENCIA ARTIFICIAL";
-
- }
-}
-</script>
-
-</body>
-</html>
+ 
