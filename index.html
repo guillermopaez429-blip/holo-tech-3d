@@ -221,3 +221,350 @@ function downloadDesign(){
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HOLO TECH 3D AI</title>
+
+<script src="https://js.puter.com/v2/"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#030914;
+ color:#e8faff;
+ font-family:Arial,sans-serif;
+}
+header{
+ text-align:center;
+ padding:25px 12px;
+ background:linear-gradient(135deg,#03172e,#075c91);
+ border-bottom:2px solid #00dfff;
+}
+h1{color:#42eaff;text-shadow:0 0 15px #00dfff}
+main{max-width:520px;margin:auto;padding:16px}
+.panel{
+ background:linear-gradient(145deg,#0b2037,#06101e);
+ border:1px solid #087eaa;
+ border-radius:18px;
+ padding:18px;
+ margin-bottom:17px;
+ box-shadow:0 0 18px #007b9c33;
+}
+h2{color:#54eaff;font-size:18px}
+textarea{
+ width:100%;
+ min-height:110px;
+ padding:13px;
+ border-radius:10px;
+ border:1px solid #19c8ee;
+ background:#071a2d;
+ color:white;
+ font-size:15px;
+}
+button{
+ width:100%;
+ padding:15px;
+ margin-top:10px;
+ border:1px solid #32dfff;
+ border-radius:10px;
+ color:white;
+ background:linear-gradient(100deg,#075078,#06304c);
+ font-weight:bold;
+ font-size:15px;
+}
+button:disabled{opacity:.5}
+#resultado{
+ width:100%;
+ margin-top:15px;
+ border-radius:14px;
+ display:none;
+}
+#estado{
+ color:#54eaff;
+ text-align:center;
+ margin-top:15px;
+}
+footer{text-align:center;color:#79a9c1;padding:20px;font-size:12px}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>HOLO TECH 3D</h1>
+<p>INTELIGENCIA ARTIFICIAL · DISEÑOS HOLOGRÁFICOS</p>
+</header>
+
+<main>
+
+<div class="panel">
+<h2>✦ CREADOR DE IMÁGENES IA</h2>
+<p>Describe el fondo que querés crear:</p>
+
+<textarea id="prompt" placeholder="Ejemplo: Un dragón holográfico azul y violeta, con luces 3D y fondo espacial..."></textarea>
+
+<button onclick="generar()">✦ GENERAR CON INTELIGENCIA ARTIFICIAL</button>
+
+<p id="estado">Esperando tu descripción...</p>
+</div>
+
+<div class="panel">
+<h2>◈ TU CREACIÓN</h2>
+
+<img id="resultado" alt="Imagen generada por IA">
+
+<a id="descarga" style="display:none;color:#54eaff"
+download="holo-tech-3d.png">
+<button>⬇ DESCARGAR IMAGEN</button>
+</a>
+</div>
+
+<div class="panel">
+<h2>HOLO TECH 3D</h2>
+<p>✓ Generación de imágenes con IA</p>
+<p>✓ Diseños holográficos</p>
+<p>✓ Fondos para celulares</p>
+<p>✓ Estilo futurista 3D</p>
+</div>
+
+</main>
+
+<footer>
+HOLO TECH 3D · EL FUTURO EN TUS MANOS
+</footer>
+
+<script>
+async function generar(){
+
+ const prompt=document.getElementById("prompt").value.trim();
+ const estado=document.getElementById("estado");
+ const boton=document.querySelector("button");
+ const resultado=document.getElementById("resultado");
+ const descarga=document.getElementById("descarga");
+
+ if(!prompt){
+  estado.textContent="Escribí una descripción primero.";
+  return;
+ }
+
+ boton.disabled=true;
+ boton.textContent="GENERANDO TU DISEÑO...";
+ estado.textContent="La inteligencia artificial está trabajando...";
+
+ resultado.style.display="none";
+ descarga.style.display="none";
+
+ try{
+
+  const texto =
+  "Create a stunning vertical 9:16 smartphone wallpaper, " +
+  "high quality, ultra detailed 3D holographic art, " +
+  "glowing neon lights, cinematic depth, futuristic design. " +
+  "Image description: " + prompt;
+
+  const imagen=await puter.ai.txt2img(texto);
+
+  resultado.src=imagen.src;
+  resultado.style.display="block";
+
+  descarga.href=imagen.src;
+  descarga.style.display="block";
+
+  estado.textContent="¡Tu diseño fue generado con IA!";
+
+ }catch(error){
+
+  estado.textContent="Error al generar. Revisá tu conexión o acceso a Puter.";
+
+  console.error(error);
+
+ }finally{
+
+  boton.disabled=false;
+  boton.textContent="✦ GENERAR CON INTELIGENCIA ARTIFICIAL";
+
+ }
+}
+</script>
+
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HOLO TECH 3D AI</title>
+
+<script src="https://js.puter.com/v2/"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ background:#030914;
+ color:#e8faff;
+ font-family:Arial,sans-serif;
+}
+header{
+ text-align:center;
+ padding:25px 12px;
+ background:linear-gradient(135deg,#03172e,#075c91);
+ border-bottom:2px solid #00dfff;
+}
+h1{color:#42eaff;text-shadow:0 0 15px #00dfff}
+main{max-width:520px;margin:auto;padding:16px}
+.panel{
+ background:linear-gradient(145deg,#0b2037,#06101e);
+ border:1px solid #087eaa;
+ border-radius:18px;
+ padding:18px;
+ margin-bottom:17px;
+ box-shadow:0 0 18px #007b9c33;
+}
+h2{color:#54eaff;font-size:18px}
+textarea{
+ width:100%;
+ min-height:110px;
+ padding:13px;
+ border-radius:10px;
+ border:1px solid #19c8ee;
+ background:#071a2d;
+ color:white;
+ font-size:15px;
+}
+button{
+ width:100%;
+ padding:15px;
+ margin-top:10px;
+ border:1px solid #32dfff;
+ border-radius:10px;
+ color:white;
+ background:linear-gradient(100deg,#075078,#06304c);
+ font-weight:bold;
+ font-size:15px;
+}
+button:disabled{opacity:.5}
+#resultado{
+ width:100%;
+ margin-top:15px;
+ border-radius:14px;
+ display:none;
+}
+#estado{
+ color:#54eaff;
+ text-align:center;
+ margin-top:15px;
+}
+footer{text-align:center;color:#79a9c1;padding:20px;font-size:12px}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>HOLO TECH 3D</h1>
+<p>INTELIGENCIA ARTIFICIAL · DISEÑOS HOLOGRÁFICOS</p>
+</header>
+
+<main>
+
+<div class="panel">
+<h2>✦ CREADOR DE IMÁGENES IA</h2>
+<p>Describe el fondo que querés crear:</p>
+
+<textarea id="prompt" placeholder="Ejemplo: Un dragón holográfico azul y violeta, con luces 3D y fondo espacial..."></textarea>
+
+<button onclick="generar()">✦ GENERAR CON INTELIGENCIA ARTIFICIAL</button>
+
+<p id="estado">Esperando tu descripción...</p>
+</div>
+
+<div class="panel">
+<h2>◈ TU CREACIÓN</h2>
+
+<img id="resultado" alt="Imagen generada por IA">
+
+<a id="descarga" style="display:none;color:#54eaff"
+download="holo-tech-3d.png">
+<button>⬇ DESCARGAR IMAGEN</button>
+</a>
+</div>
+
+<div class="panel">
+<h2>HOLO TECH 3D</h2>
+<p>✓ Generación de imágenes con IA</p>
+<p>✓ Diseños holográficos</p>
+<p>✓ Fondos para celulares</p>
+<p>✓ Estilo futurista 3D</p>
+</div>
+
+</main>
+
+<footer>
+HOLO TECH 3D · EL FUTURO EN TUS MANOS
+</footer>
+
+<script>
+async function generar(){
+
+ const prompt=document.getElementById("prompt").value.trim();
+ const estado=document.getElementById("estado");
+ const boton=document.querySelector("button");
+ const resultado=document.getElementById("resultado");
+ const descarga=document.getElementById("descarga");
+
+ if(!prompt){
+  estado.textContent="Escribí una descripción primero.";
+  return;
+ }
+
+ boton.disabled=true;
+ boton.textContent="GENERANDO TU DISEÑO...";
+ estado.textContent="La inteligencia artificial está trabajando...";
+
+ resultado.style.display="none";
+ descarga.style.display="none";
+
+ try{
+
+  const texto =
+  "Create a stunning vertical 9:16 smartphone wallpaper, " +
+  "high quality, ultra detailed 3D holographic art, " +
+  "glowing neon lights, cinematic depth, futuristic design. " +
+  "Image description: " + prompt;
+
+  const imagen=await puter.ai.txt2img(texto);
+
+  resultado.src=imagen.src;
+  resultado.style.display="block";
+
+  descarga.href=imagen.src;
+  descarga.style.display="block";
+
+  estado.textContent="¡Tu diseño fue generado con IA!";
+
+ }catch(error){
+
+  estado.textContent="Error al generar. Revisá tu conexión o acceso a Puter.";
+
+  console.error(error);
+
+ }finally{
+
+  boton.disabled=false;
+  boton.textContent="✦ GENERAR CON INTELIGENCIA ARTIFICIAL";
+
+ }
+}
+</script>
+
+</body>
+</html>
