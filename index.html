@@ -139,7 +139,9 @@ footer{text-align:center;color:#79a9c1;font-size:11px;padding:20px}
 <button onclick="createDesign()">
 🎨 CREAR FONDO HOLOGRÁFICO
 </button>
-
+<button onclick="generateVariations()">
+✨ GENERAR DISEÑO SORPRESA
+</button>
 <div id="svgResult"></div>
 
 <button id="downloadSVG" style="display:none" onclick="downloadDesign()">
@@ -306,6 +308,21 @@ function downloadDesign(){
 
  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
+
+
+function generateVariations(){
+ const styles = ["futurista","cyberpunk","galaxia","cristal","tecnologico"];
+ const randomStyle = styles[Math.floor(Math.random()*styles.length)];
+
+ document.getElementById("style").value = randomStyle;
+
+ if(!document.getElementById("prompt").value.trim()){
+   document.getElementById("prompt").value = "Planeta holográfico 3D con luces de neón";
+ }
+
+ createDesign();
+}
+
 </script>
 
 </body>
