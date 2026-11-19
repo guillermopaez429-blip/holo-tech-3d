@@ -1,142 +1,223 @@
-a
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#030914">
 <title>HOLO TECH 3D</title>
+
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;
- background:#030914;
- color:#e9fcff;
+ margin:0;background:#030914;color:#e9fcff;
  font-family:Arial,sans-serif;
 }
 header{
- padding:24px 15px;
- text-align:center;
+ padding:22px 15px;text-align:center;
  background:linear-gradient(135deg,#03172e,#075c91);
  border-bottom:1px solid #00d9ff;
 }
-h1{
- color:#42eaff;
- text-shadow:0 0 15px #00cfff;
- margin:5px;
-}
+h1{color:#42eaff;text-shadow:0 0 15px #00cfff;margin:5px}
 header p{color:#b5eaff;font-size:13px}
-main{padding:18px;max-width:480px;margin:auto}
+main{padding:16px;max-width:480px;margin:auto}
 .panel{
  background:linear-gradient(145deg,#0b2037,#06101e);
- border:1px solid #087eaa;
- border-radius:18px;
- padding:17px;
- margin-bottom:17px;
+ border:1px solid #087eaa;border-radius:18px;
+ padding:17px;margin-bottom:17px;
  box-shadow:0 0 18px #007b9c33;
 }
 h2{font-size:17px;color:#54eaff}
 .phone{
- width:220px;
- height:390px;
- margin:15px auto;
- border:3px solid #39dfff;
- border-radius:30px;
+ width:220px;height:390px;margin:15px auto;
+ border:3px solid #39dfff;border-radius:30px;
  padding:12px;
  background:radial-gradient(circle at 50% 40%,#075b82,#061426 65%,#020710);
  box-shadow:0 0 25px #00cfff88;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
- text-align:center;
- overflow:hidden;
+ display:flex;flex-direction:column;
+ align-items:center;justify-content:center;
+ text-align:center;overflow:hidden;
 }
 .orb{
- width:105px;height:105px;
- border-radius:50%;
+ width:105px;height:105px;border-radius:50%;
  background:radial-gradient(circle at 35% 30%,white,#25dfff 20%,#0759a0 60%,#020914);
- box-shadow:0 0 30px #00dfff;
- margin:20px;
+ box-shadow:0 0 30px #00dfff;margin:20px;
 }
 .phone h2{font-size:19px}
 .phone p{font-size:11px;color:#b9eaff}
 button{
- width:100%;
- padding:14px;
- margin:6px 0;
- border:1px solid #32dfff;
- border-radius:10px;
- color:white;
- background:linear-gradient(100deg,#075078,#06304c);
- font-size:14px;
- font-weight:bold;
+ width:100%;padding:14px;margin:6px 0;
+ border:1px solid #32dfff;border-radius:10px;
+ color:white;background:linear-gradient(100deg,#075078,#06304c);
+ font-size:14px;font-weight:bold;cursor:pointer;
 }
 button:active{background:#087da4}
-input{
- width:100%;padding:12px;
+input,select{
+ width:100%;padding:13px;margin:7px 0;
  background:#071a2d;color:white;
- border:1px solid #19c8ee;
- border-radius:9px;
+ border:1px solid #19c8ee;border-radius:9px;
 }
+select option{background:#071a2d}
+.colors{display:flex;gap:12px;justify-content:center;margin:15px}
+.color{
+ width:38px;height:38px;border-radius:50%;
+ border:2px solid white;cursor:pointer;
+}
+#result{
+ margin-top:15px;text-align:center;
+}
+#result svg{width:100%;max-width:280px;border-radius:12px}
 footer{text-align:center;color:#79a9c1;font-size:11px;padding:20px}
 </style>
 </head>
 
-<!-- GENERADOR HOLO TECH 3D -->
-<section id="holo-generator" style="padding:20px;background:#090d20;color:white;border-radius:18px;margin:15px;">
-  <h2 style="text-align:center;color:#00eaff;">✨ HOLO AI 3D</h2>
-  <p style="text-align:center;">Creá tu propio fondo holográfico</p>
+<body>
 
-  <input id="holo-prompt" type="text"
-    placeholder="Ej: Dragón azul holográfico"
-    style="width:100%;padding:14px;border-radius:10px;border:1px solid #00eaff;background:#111a35;color:white;box-sizing:border-box;">
+<header>
+<h1>✨ HOLO TECH 3D</h1>
+<p>Personalizá tu mundo digital</p>
+</header>
 
-  <select id="holo-style"
-    style="width:100%;padding:14px;margin-top:12px;border-radius:10px;background:#111a35;color:white;">
-    <option>Holograma futurista</option>
-    <option>Neón cyberpunk</option>
-    <option>Galaxia 3D</option>
-    <option>Cristal holográfico</option>
-    <option>Abstracto tecnológico</option>
-  </select>
+<main>
 
-  <button onclick="holoPreview()"
-    style="width:100%;padding:15px;margin-top:15px;background:#00cfff;color:#001020;border:0;border-radius:12px;font-weight:bold;">
-    CREAR MI DISEÑO
-  </button>
+<section class="panel">
+<h2>📱 Vista previa de tu teléfono</h2>
 
-  <div id="holo-result" style="margin-top:18px;text-align:center;">
-    Tu diseño aparecerá aquí.
-  </div>
+<div class="phone" id="phone">
+<div class="orb" id="orb"></div>
+<h2>HOLO TECH</h2>
+<p>EL FUTURO EN TUS MANOS</p>
+<p>✨ HOLOGRAPHIC EXPERIENCE ✨</p>
+</div>
+
+<h2>🎨 Elegí tu color</h2>
+
+<div class="colors">
+<button class="color" style="background:#00dfff" onclick="changeColor('#00dfff')"></button>
+<button class="color" style="background:#a855f7" onclick="changeColor('#a855f7')"></button>
+<button class="color" style="background:#00ff99" onclick="changeColor('#00ff99')"></button>
+<button class="color" style="background:#ff42b3" onclick="changeColor('#ff42b3')"></button>
+</div>
 </section>
 
+<section class="panel">
+<h2>✨ HOLO AI 3D</h2>
+<p>Creá tu propio fondo holográfico.</p>
+
+<input id="prompt" placeholder="Ej: Dragón azul holográfico">
+
+<select id="style">
+<option value="futurista">Holograma futurista</option>
+<option value="cyberpunk">Neón cyberpunk</option>
+<option value="galaxia">Galaxia 3D</option>
+<option value="cristal">Cristal holográfico</option>
+<option value="tecnologico">Tecnología abstracta</option>
+</select>
+
+<button onclick="createDesign()">🚀 CREAR MI DISEÑO</button>
+
+<div id="result">
+<p>Tu diseño aparecerá aquí.</p>
+</div>
+
+<button id="download" style="display:none" onclick="downloadDesign()">
+⬇ DESCARGAR FONDO
+</button>
+</section>
+
+<section class="panel">
+<h2>🌌 Próximas funciones</h2>
+<p>• Generación de imágenes con IA real.</p>
+<p>• Fondos animados 3D.</p>
+<p>• Temas personalizados.</p>
+<p>• Iconos holográficos.</p>
+<p>• Personalización para Android.</p>
+</section>
+
+</main>
+
+<footer>
+HOLO TECH 3D © 2026<br>
+Creando el futuro digital
+</footer>
+
 <script>
-function holoPreview() {
-  const prompt = document.getElementById("holo-prompt").value.trim();
-  const style = document.getElementById("holo-style").value;
-  const result = document.getElementById("holo-result");
+let currentColor = "#00dfff";
+let currentSVG = "";
 
-  if (!prompt) {
-    result.innerHTML = "⚠️ Escribí qué fondo querés crear.";
-    return;
-  }
-
-  result.innerHTML = `
-    <div style="padding:20px;border:1px solid #00eaff;border-radius:15px;background:linear-gradient(135deg,#071c45,#30105b,#001c36);">
-      <h3 style="color:#00eaff;">✨ HOLO TECH 3D</h3>
-      <p>${holoEscape(prompt)}</p>
-      <p>Estilo: ${holoEscape(style)}</p>
-      <p>Diseño preparado para generación IA.</p>
-    </div>`;
+function changeColor(color){
+ currentColor = color;
+ document.getElementById("phone").style.borderColor = color;
+ document.getElementById("phone").style.boxShadow = "0 0 25px "+color+"88";
+ document.getElementById("orb").style.boxShadow = "0 0 30px "+color;
+ document.getElementById("orb").style.background =
+ "radial-gradient(circle at 35% 30%,white,"+color+" 25%,#0759a0 65%,#020914)";
 }
 
-function holoEscape(text) {
-  return text.replace(/[&<>"']/g, c => ({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;',
-    '"':'&quot;', "'":'&#39;'
-  })[c]);
+function escapeXML(text){
+ return text.replace(/[&<>"']/g,function(c){
+ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&apos;"}[c];
+ });
+}
+
+function createDesign(){
+ const prompt = document.getElementById("prompt").value.trim();
+ const style = document.getElementById("style").value;
+ const result = document.getElementById("result");
+
+ if(!prompt){
+ result.innerHTML = "<p>⚠️ Escribí qué fondo querés crear.</p>";
+ document.getElementById("download").style.display="none";
+ return;
+ }
+
+ const description = escapeXML(prompt);
+ const palette = {
+ futurista:["#061b48","#00dfff"],
+ cyberpunk:["#310044","#ff42b3"],
+ galaxia:["#10052e","#a855f7"],
+ cristal:["#052d43","#8fffea"],
+ tecnologico:["#061a30","#00ff99"]
+ };
+
+ const colors = palette[style];
+
+ currentSVG = `
+ <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+ <defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+ <stop stop-color="${colors[0]}"/>
+ <stop offset="1" stop-color="#030914"/>
+ </linearGradient>
+ <radialGradient id="glow">
+ <stop stop-color="${colors[1]}" stop-opacity=".8"/>
+ <stop offset="1" stop-color="${colors[1]}" stop-opacity="0"/>
+ </radialGradient>
+ </defs>
+ <rect width="1080" height="1920" fill="url(#bg)"/>
+ <circle cx="540" cy="780" r="390" fill="url(#glow)"/>
+ <circle cx="540" cy="780" r="240" fill="none" stroke="${colors[1]}" stroke-width="5"/>
+ <circle cx="540" cy="780" r="190" fill="none" stroke="${colors[1]}" stroke-width="3" stroke-dasharray="15 20"/>
+ <path d="M0 1100 L540 300 L1080 1100" fill="none" stroke="${colors[1]}" stroke-width="3" opacity=".5"/>
+ <text x="540" y="1370" font-size="52" fill="white" text-anchor="middle">${description}</text>
+ <text x="540" y="1480" font-size="38" fill="${colors[1]}" text-anchor="middle">HOLO TECH 3D</text>
+ </svg>`;
+
+ result.innerHTML = currentSVG;
+ document.getElementById("download").style.display="block";
+}
+
+function downloadDesign(){
+ if(!currentSVG)return;
+ const blob = new Blob([currentSVG],{type:"image/svg+xml"});
+ const url = URL.createObjectURL(blob);
+ const link = document.createElement("a");
+ link.href = url;
+ link.download = "holo-tech-3d.svg";
+ link.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 </script>
-<body>
-</html> 
 
+</body>
+</html>
