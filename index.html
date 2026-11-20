@@ -9,67 +9,175 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
- margin:0;background:#030914;color:#e9fcff;
+ margin:0;
+ background:#030914;
+ color:#e9fcff;
  font-family:Arial,sans-serif;
 }
+
 header{
- padding:22px 15px;text-align:center;
+ padding:22px 15px;
+ text-align:center;
  background:linear-gradient(135deg,#03172e,#075c91);
  border-bottom:1px solid #00d9ff;
 }
+
 h1{color:#42eaff;text-shadow:0 0 15px #00cfff}
 header p{color:#b5eaff;font-size:13px}
+
 main{padding:16px;max-width:480px;margin:auto}
+
 .panel{
  background:linear-gradient(145deg,#0b2037,#06101e);
- border:1px solid #087eaa;border-radius:18px;
- padding:17px;margin-bottom:17px;
+ border:1px solid #087eaa;
+ border-radius:18px;
+ padding:17px;
+ margin-bottom:17px;
  box-shadow:0 0 18px #007b9c33;
 }
+
 h2{font-size:17px;color:#54eaff}
+
 .phone{
- width:220px;height:390px;margin:15px auto;
- border:3px solid #39dfff;border-radius:30px;
+ width:220px;
+ height:390px;
+ margin:15px auto;
+ border:3px solid #39dfff;
+ border-radius:30px;
  padding:12px;
  background:radial-gradient(circle at 50% 40%,#075b82,#061426 65%,#020710);
  box-shadow:0 0 25px #00cfff88;
- display:flex;flex-direction:column;
- align-items:center;justify-content:center;
- text-align:center;overflow:hidden;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ overflow:hidden;
 }
+
+#earthClock{
+ font-size:25px;
+ color:#42eaff;
+ text-shadow:0 0 12px #00dfff;
+}
+
+#earthDate{
+ font-size:12px;
+ color:white;
+ margin-top:5px;
+ text-transform:capitalize;
+}
+
 .orb{
- width:105px;height:105px;border-radius:50%;
- background:radial-gradient(circle at 35% 30%,white,#25dfff 20%,#0759a0 60%,#020914);
- box-shadow:0 0 30px #00dfff;margin:20px;
+ width:145px;
+ height:145px;
+ flex-shrink:0;
+ border-radius:50%;
+ position:relative;
+ margin:20px;
+ overflow:hidden;
+
+ background-image:
+ radial-gradient(circle at 35% 30%,
+ transparent 20%,
+ rgba(0,0,0,.9) 100%),
+ url("https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg");
+
+ background-size:100% 100%,200% 100%;
+ background-position:center,0% 50%;
+
+ animation:earthSpin 30s linear infinite;
+
+ box-shadow:
+ 0 0 15px #00dfff,
+ 0 0 35px #008cff,
+ inset -15px -5px 25px #000;
+
+ filter:brightness(1);
 }
+
+.orb:after{
+ content:"";
+ position:absolute;
+ inset:0;
+ border-radius:50%;
+ box-shadow:
+ inset -18px -5px 25px #000,
+ inset 4px 3px 15px #7ceeff88;
+ pointer-events:none;
+}
+
+@keyframes earthSpin{
+ from{background-position:center,0% 50%}
+ to{background-position:center,100% 50%}
+}
+
 button{
- width:100%;padding:14px;margin:6px 0;
- border:1px solid #32dfff;border-radius:10px;
- color:white;background:linear-gradient(100deg,#075078,#06304c);
- font-size:14px;font-weight:bold;cursor:pointer;
+ width:100%;
+ padding:14px;
+ margin:6px 0;
+ border:1px solid #32dfff;
+ border-radius:10px;
+ color:white;
+ background:linear-gradient(100deg,#075078,#06304c);
+ font-size:14px;
+ font-weight:bold;
+ cursor:pointer;
 }
+
 button:disabled{opacity:.5}
+
 input,select{
- width:100%;padding:13px;margin:7px 0;
- background:#071a2d;color:white;
- border:1px solid #19c8ee;border-radius:9px;
+ width:100%;
+ padding:13px;
+ margin:7px 0;
+ background:#071a2d;
+ color:white;
+ border:1px solid #19c8ee;
+ border-radius:9px;
 }
+
 .colors{
- display:flex;gap:12px;justify-content:center;margin:15px
+ display:flex;
+ gap:12px;
+ justify-content:center;
+ margin:15px;
 }
-.color{width:38px;height:38px;padding:0;border-radius:50%}
+
+.color{
+ width:38px;
+ height:38px;
+ padding:0;
+ border-radius:50%;
+}
+
 #result{margin-top:15px;text-align:center}
+
 #result img{
- display:block;width:100%;height:auto;
- border-radius:12px;margin-top:10px;
+ display:block;
+ width:100%;
+ height:auto;
+ border-radius:12px;
+ margin-top:10px;
 }
+
 #status{
- color:#42eaff;text-align:center;
- font-size:13px;min-height:20px;
+ color:#42eaff;
+ text-align:center;
+ font-size:13px;
+ min-height:20px;
 }
+
 #svgResult svg{width:100%;height:auto}
-footer{text-align:center;color:#79a9c1;font-size:11px;padding:20px}
+
+footer{
+ text-align:center;
+ color:#79a9c1;
+ font-size:11px;
+ padding:20px;
+}
 </style>
 </head>
 
@@ -83,25 +191,44 @@ footer{text-align:center;color:#79a9c1;font-size:11px;padding:20px}
 <main>
 
 <section class="panel">
+
 <h2>📱 Vista previa de tu teléfono</h2>
 
 <div class="phone" id="phone">
+
+<div id="earthClock">00:00:00</div>
+<div id="earthDate">Cargando fecha...</div>
+
 <div class="orb" id="orb"></div>
-<h2>HOLO TECH</h2>
-<p>EL FUTURO EN TUS MANOS</p>
-<p>✨ HOLOGRAPHIC EXPERIENCE ✨</p>
+
+<p style="color:#42eaff;font-size:12px">
+HOLO TECH 3D
+</p>
+
 </div>
 
 <h2>🎨 Elegí tu color</h2>
+
 <div class="colors">
-<button class="color" style="background:#00dfff" onclick="changeColor('#00dfff')"></button>
-<button class="color" style="background:#a855f7" onclick="changeColor('#a855f7')"></button>
-<button class="color" style="background:#00ff99" onclick="changeColor('#00ff99')"></button>
-<button class="color" style="background:#ff42b3" onclick="changeColor('#ff42b3')"></button>
+
+<button class="color" style="background:#00dfff"
+onclick="changeColor('#00dfff')"></button>
+
+<button class="color" style="background:#a855f7"
+onclick="changeColor('#a855f7')"></button>
+
+<button class="color" style="background:#00ff99"
+onclick="changeColor('#00ff99')"></button>
+
+<button class="color" style="background:#ff42b3"
+onclick="changeColor('#ff42b3')"></button>
+
 </div>
+
 </section>
 
 <section class="panel">
+
 <h2>🤖 HOLO AI 3D</h2>
 <p>Creá imágenes originales con inteligencia artificial.</p>
 
@@ -125,36 +252,49 @@ footer{text-align:center;color:#79a9c1;font-size:11px;padding:20px}
 <p>Tu imagen aparecerá aquí.</p>
 </div>
 
-<button id="saveAI" style="display:none" onclick="downloadImage()">
+<button id="saveAI" style="display:none"
+onclick="downloadImage()">
 ⬇ DESCARGAR IMAGEN
 </button>
 
-<button id="openAI" style="display:none" onclick="openImage()">
+<button id="openAI" style="display:none"
+onclick="openImage()">
 🖼️ ABRIR IMAGEN
 </button>
+
 </section>
 
 <section class="panel">
+
 <h2>🌌 Creador de fondos holográficos</h2>
 <p>Creá fondos decorativos sin IA.</p>
 
-<button onclick="createDesign()">🎨 CREAR FONDO HOLOGRÁFICO</button>
-<button onclick="generateVariations()">✨ GENERAR DISEÑO SORPRESA</button>
+<button onclick="createDesign()">
+🎨 CREAR FONDO HOLOGRÁFICO
+</button>
+
+<button onclick="generateVariations()">
+✨ GENERAR DISEÑO SORPRESA
+</button>
 
 <div id="svgResult"></div>
 
-<button id="downloadSVG" style="display:none" onclick="downloadDesign()">
+<button id="downloadSVG" style="display:none"
+onclick="downloadDesign()">
 ⬇ DESCARGAR FONDO SVG
 </button>
+
 </section>
 
 <section class="panel">
+
 <h2>🌌 HOLO TECH 3D</h2>
 <p>• Inteligencia artificial.</p>
 <p>• Fondos holográficos.</p>
 <p>• Temas personalizados.</p>
 <p>• Iconos holográficos.</p>
 <p>• Personalización para Android.</p>
+
 </section>
 
 </main>
@@ -167,6 +307,7 @@ Creando el futuro digital
 <script src="https://js.puter.com/v2/"></script>
 
 <script>
+
 let currentColor="#00dfff";
 let currentImage="";
 let currentSVG="";
@@ -179,18 +320,55 @@ const palette={
  tecnologico:["#032b20","#00ff99"]
 };
 
+// RELOJ Y LUMINOSIDAD
+
+function updateEarthClock(){
+
+ const now=new Date();
+
+ document.getElementById("earthClock").textContent=
+ now.toLocaleTimeString("es-AR");
+
+ document.getElementById("earthDate").textContent=
+ now.toLocaleDateString("es-AR",{
+  weekday:"long",
+  day:"numeric",
+  month:"long"
+ });
+
+ const hour=
+ now.getHours()+now.getMinutes()/60;
+
+ const brightness=
+ 0.55+0.45*
+ (1+Math.cos((hour-12)*Math.PI/12))/2;
+
+ document.getElementById("orb").style.filter=
+ "brightness("+brightness+")";
+}
+
+updateEarthClock();
+setInterval(updateEarthClock,1000);
+
+// CAMBIAR COLOR
+
 function changeColor(color){
+
  currentColor=color;
+
  const phone=document.getElementById("phone");
  const orb=document.getElementById("orb");
 
  phone.style.borderColor=color;
  phone.style.boxShadow="0 0 25px "+color+"88";
- orb.style.boxShadow="0 0 30px "+color;
- orb.style.background=
- "radial-gradient(circle at 35% 30%,white,"+
- color+" 25%,#0759a0 65%,#020914)";
+
+ orb.style.boxShadow=
+ "0 0 15px "+color+
+ ", 0 0 35px "+color+
+ ", inset -15px -5px 25px #000";
 }
+
+// INTELIGENCIA ARTIFICIAL
 
 async function createAI(){
 
@@ -214,8 +392,10 @@ async function createAI(){
  button.textContent="⏳ GENERANDO...";
  status.textContent="La inteligencia artificial está trabajando...";
  result.innerHTML="";
+
  document.getElementById("saveAI").style.display="none";
  document.getElementById("openAI").style.display="none";
+
  currentImage="";
 
  const styles={
@@ -228,7 +408,8 @@ async function createAI(){
 
  try{
 
-  const finalPrompt=prompt+", "+styles[style]+
+  const finalPrompt=
+  prompt+", "+styles[style]+
   ", highly detailed, beautiful digital artwork, vertical wallpaper";
 
   const img=await puter.ai.txt2img(finalPrompt,{
@@ -246,7 +427,7 @@ async function createAI(){
   preview.alt="Imagen creada con HOLO AI 3D";
 
   preview.onerror=()=>{
-   status.textContent="La imagen se creó, pero no se pudo mostrar. Intentá abrirla nuevamente.";
+   status.textContent="La imagen se creó, pero no se pudo mostrar.";
   };
 
   result.appendChild(preview);
@@ -259,7 +440,7 @@ async function createAI(){
  }catch(error){
 
   console.error(error);
-  status.textContent="Error al generar o mostrar la imagen: "+error.message;
+  status.textContent="Error al generar la imagen: "+error.message;
 
  }finally{
 
@@ -268,6 +449,8 @@ async function createAI(){
 
  }
 }
+
+// DESCARGAR IMAGEN
 
 async function downloadImage(){
 
@@ -292,6 +475,7 @@ async function downloadImage(){
   const link=document.createElement("a");
   link.href=url;
   link.download="holo-tech-3d.png";
+
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -303,7 +487,7 @@ async function downloadImage(){
  }catch(error){
 
   console.error(error);
-  status.textContent="El navegador no permitió descargar directamente. Abrí la imagen y guardala desde Chrome.";
+  status.textContent="No se pudo descargar directamente. Abrí la imagen y guardala desde Chrome.";
 
   openImage();
  }
@@ -319,6 +503,8 @@ function openImage(){
  window.open(currentImage,"_blank");
 }
 
+// CREAR FONDO SVG
+
 function createDesign(){
 
  const style=document.getElementById("style").value;
@@ -327,42 +513,63 @@ function createDesign(){
  currentSVG=`
  <svg xmlns="http://www.w3.org/2000/svg"
  width="1080" height="1920" viewBox="0 0 1080 1920">
+
  <defs>
+
  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
  <stop stop-color="${colors[0]}"/>
  <stop offset="1" stop-color="#030914"/>
  </linearGradient>
+
  <radialGradient id="glow">
  <stop stop-color="${colors[1]}" stop-opacity=".8"/>
  <stop offset="1" stop-color="${colors[1]}" stop-opacity="0"/>
  </radialGradient>
+
  </defs>
+
  <rect width="1080" height="1920" fill="url(#bg)"/>
+
  <circle cx="540" cy="780" r="390" fill="url(#glow)"/>
- <circle cx="540" cy="780" r="240" fill="none"
- stroke="${colors[1]}" stroke-width="5"/>
- <circle cx="540" cy="780" r="190" fill="none"
- stroke="${colors[1]}" stroke-width="3" stroke-dasharray="15 20"/>
+
+ <circle cx="540" cy="780" r="240"
+ fill="none" stroke="${colors[1]}" stroke-width="5"/>
+
+ <circle cx="540" cy="780" r="190"
+ fill="none" stroke="${colors[1]}"
+ stroke-width="3" stroke-dasharray="15 20"/>
+
  <path d="M0 1100 L540 300 L1080 1100"
  fill="none" stroke="${colors[1]}" stroke-width="3"/>
- <text x="540" y="1370" font-size="70" fill="white"
- text-anchor="middle">HOLO TECH 3D</text>
+
+ <text x="540" y="1370" font-size="70"
+ fill="white" text-anchor="middle">
+ HOLO TECH 3D
+ </text>
+
  </svg>`;
 
  document.getElementById("svgResult").innerHTML=currentSVG;
+
  document.getElementById("downloadSVG").style.display="block";
 }
+
+// DESCARGAR FONDO
 
 function downloadDesign(){
 
  if(!currentSVG)return;
 
- const blob=new Blob([currentSVG],{type:"image/svg+xml"});
+ const blob=new Blob([currentSVG],{
+  type:"image/svg+xml"
+ });
+
  const url=URL.createObjectURL(blob);
  const link=document.createElement("a");
 
  link.href=url;
  link.download="holo-tech-3d.svg";
+
  document.body.appendChild(link);
  link.click();
  link.remove();
@@ -370,20 +577,33 @@ function downloadDesign(){
  setTimeout(()=>URL.revokeObjectURL(url),3000);
 }
 
+// DISEÑO SORPRESA
+
 function generateVariations(){
 
- const styles=["futurista","cyberpunk","galaxia","cristal","tecnologico"];
- const randomStyle=styles[Math.floor(Math.random()*styles.length)];
+ const styles=[
+  "futurista",
+  "cyberpunk",
+  "galaxia",
+  "cristal",
+  "tecnologico"
+ ];
+
+ const randomStyle=
+ styles[Math.floor(Math.random()*styles.length)];
 
  document.getElementById("style").value=randomStyle;
 
  if(!document.getElementById("prompt").value.trim()){
+
   document.getElementById("prompt").value=
   "Planeta holográfico 3D con luces de neón";
+
  }
 
  createDesign();
 }
+
 </script>
 
 </body>
